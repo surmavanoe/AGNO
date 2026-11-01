@@ -1,0 +1,6 @@
+{
+  "name": "AGNO FinEdu — Personalized Budget & Investment Intelligence",
+  "description": "AI-driven financial education, goal tracking, and investment simulation platform combining FINEDU learning modules, scenario calculators, and personalized financial insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
