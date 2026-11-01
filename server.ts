@@ -25,39 +25,34 @@ app.post('/api/advisor', async (req, res) => {
     const { message, userContext, history } = req.body;
     const {
       knowledgeLevel = 'Beginner',
-      language = 'en',
-      monthlyIncome = 2500,
-      monthlySavings = 500,
+      language = 'ka',
+      monthlyIncome = 3200,
+      monthlySavings = 1150,
       riskTolerance = 'Moderate',
       goals = [],
-      currency = 'USD'
+      currency = '₾',
+      explanationMode = 'მარტივად',
+      primaryGoal = 'საგანგებო ფონდი',
+      interests = []
     } = userContext || {};
 
     const apiKey = process.env.GEMINI_API_KEY;
 
-    const systemPrompt = `You are the AGNO Financial AI Consultant, an expert financial educator and wealth analytics advisor for the FINEDU platform.
-Brand ethos: Transform intimidating financial concepts into actionable, level-appropriate clarity.
-User Literacy Level: ${knowledgeLevel} (Beginner: use simple everyday analogies like supermarket baskets, avoid jargon; Intermediate: explain mechanical trade-offs and risk/reward curves; Advanced: use exact quantitative concepts like CAGR, real yields, Sharpe ratio, tax optimization).
-User Profile:
-- Monthly Income: ${currency} ${monthlyIncome}
-- Monthly Savings: ${currency} ${monthlySavings}
-- Risk Profile: ${riskTolerance}
-- Active Goals: ${JSON.stringify(goals)}
-- Preferred Language: ${language === 'ka' ? 'Georgian (ქართული)' : 'English'}
+    const systemPrompt = `You are AGNO’s Georgian-language financial education assistant. Answer in clear, natural Georgian. Adapt the explanation to the selected level: Beginner, Intermediate or Advanced. Give educational explanations, practical examples and neutral scenario comparisons. Never promise returns. Never instruct the user to buy or sell a specific financial product. Never claim to know live market prices unless live data has actually been provided. If the user asks for personalized investment advice, explain the relevant financial concepts, risks and questions the user should consider instead of giving a direct recommendation. Clearly state assumptions. Keep normal answers concise unless the user selects detailed mode.
 
-Instructions:
-1. Respond strictly in ${language === 'ka' ? 'Georgian (ქართული)' : 'English'}. Use clean Markdown formatting with clear bullet points, bold key figures, and concise takeaways.
-2. Directly answer the user's inquiry, grounding it in their level (${knowledgeLevel}) and their financial context.
-3. If they ask about saving or investing, calculate concrete scenarios using their numbers (e.g. at ${monthlySavings}/mo, after 5 years at 7% vs 3% deposit).
-4. Emphasize the core FINEDU principle: "Knowledge + Action" (Learning concepts and putting them into practice). Mention relevant AGNO simulators (Compound interest, inflation calculator, pension simulator) when relevant.
-5. Keep answers focused, insightful, encouraging, and under 300 words. Always include an educational disclaimer that this is financial education, not licensed individualized investment advice.`;
+Active Context:
+- Selected Level: ${knowledgeLevel}
+- Selected Explanation Mode: ${explanationMode} (${explanationMode === 'მარტივად' ? 'Simple, concise everyday explanation' : explanationMode === 'დეტალურად' ? 'Detailed structured breakdown with assumptions and formulas' : 'Step-by-step practical real-life example with Georgian Lari (GEL) numbers'})
+- User Primary Goal: ${primaryGoal}
+- User Interests: ${Array.isArray(interests) ? interests.join(', ') : ''}
+- User Monthly Income: ${currency}${monthlyIncome}, Monthly Free Savings: ${currency}${monthlySavings}
+- Preferred Output Language: ${language === 'en' ? 'English' : 'Georgian (ქართული)'}`;
 
     if (!apiKey) {
-      // Intelligent fallback when API key is not yet configured in local environment
-      const isKa = language === 'ka';
-      const fallbackKa = `**AGNO AI ფინანსური ასისტენტი (დემო რეჟიმი)**\n\nგმადლობთ შეკითხვისთვის! თქვენი ცოდნის დონეა **${knowledgeLevel}**, ხოლო ყოველთვიური დანაზოგი შეადგენს **${currency} ${monthlySavings}**-ს.\n\n### მთავარი რეკომენდაცია:\n- **უსაფრთხოების ბალიში:** პირველ რიგში შექმენით 3-6 თვის ხარჯების ოდენობის საგანგებო ფონდი მაღალპროცენტიან ანაბარზე.\n- **ინფლაციის დაცვა:** საქართველოში მოსახლეობის 57% ნაღდ ფულს ინახავს სახლში, რაც წელიწადში 4-8%-ით ამცირებს მსყიდველობით უნარს. გამოიყენეთ AGNO-ს ინფლაციის კალკულატორი.\n- **დივერსიფიკაცია:** თქვენი რისკის პროფილია **${riskTolerance}**, რაც გულისხმობს ბალანსს უსაფრთხო დეპოზიტებსა და ინდექსურ ფონდებს (ETF) შორის.\n\n*შენიშვნა: AI ასისტენტის სრული გენერაციული მოდელის გასააქტიურებლად მიუთითეთ GEMINI_API_KEY.*`;
+      const isKa = language !== 'en';
+      const fallbackKa = `**AGNO AI დამხმარე (${explanationMode})**\n\nთქვენი არჩეული დონეა **${knowledgeLevel}**, ხოლო მთავარი მიზანი — **${primaryGoal}**.\n\n- **ძირითადი პრინციპი:** ფინანსური გადაწყვეტილების მიღებისას გაითვალისწინეთ ინფლაცია და რეალური სარგებელი.\n- **პრაქტიკული მაგალითი:** თუ თვეში ზოგავთ **${currency}${monthlySavings}**-ს, პირველ რიგში შეავსეთ 3–6 თვის საგანგებო ფონდი უსაფრთხო ანაბარზე.\n- **დაშვება:** ეს არის საგანმანათლებლო განმარტება და არ წარმოადგენს პერსონალურ საინვესტიციო რეკომენდაციას.`;
       
-      const fallbackEn = `**AGNO AI Financial Advisor (Demo Mode)**\n\nThank you for your question! Based on your **${knowledgeLevel}** level and monthly savings of **${currency} ${monthlySavings}**:\n\n### Key Takeaways:\n- **Emergency Cushion:** Secure 3 to 6 months of living expenses in an accessible high-yield savings account or flexible deposit before aggressive investing.\n- **Inflation Shield:** Holding cash idly erodes 4-8% purchasing power annually due to inflation. Leverage AGNO's Inflation Impact Simulator to project this exact drag.\n- **Strategy for ${riskTolerance} Profile:** Allocate a core pillar into diversified index funds / ETFs and defensive fixed income instruments.\n\n*Note: To unlock live conversational Gemini AI capabilities, set the GEMINI_API_KEY environment variable.*`;
+      const fallbackEn = `**AGNO AI Assistant (${explanationMode})**\n\nBased on your **${knowledgeLevel}** level and primary goal (**${primaryGoal}**):\n\n- **Core Concept:** Always evaluate real inflation-adjusted returns rather than nominal numbers alone.\n- **Practical Example:** With **${currency}${monthlySavings}** monthly savings, prioritize a 3–6 month emergency buffer first.\n- **Disclaimer:** Educational explanation only, not individualized investment advice.`;
 
       return res.json({ text: isKa ? fallbackKa : fallbackEn });
     }

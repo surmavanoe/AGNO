@@ -3,8 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserProfile, BudgetData, FinancialGoal } from './types';
+import {
+  PRESENTATION_DEMO_USER,
+  PRESENTATION_DEMO_BUDGET,
+  PRESENTATION_DEMO_GOALS,
+} from './data/demoData';
 import { Navbar } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
 import { BudgetGoalTracker } from './components/BudgetGoalTracker';
@@ -12,81 +17,130 @@ import { FineduAcademy } from './components/FineduAcademy';
 import { CalculatorsHub } from './components/CalculatorsHub';
 import { AiAdvisor } from './components/AiAdvisor';
 import { AboutModal } from './components/AboutModal';
+import { LearningProfileModal } from './components/LearningProfileModal';
 import { translations } from './translations';
-import { ShieldCheck, Heart } from 'lucide-react';
+
+const STORAGE_KEYS = {
+  USER: 'agno_finedu_user_v2',
+  BUDGET: 'agno_finedu_budget_v2',
+  GOALS: 'agno_finedu_goals_v2',
+};
 
 export default function App() {
-  // User Profile with simple accessible defaults
-  const [user, setUser] = useState<UserProfile>({
-    name: 'დავითი',
-    age: 45,
-    knowledgeLevel: 'Intermediate',
-    riskTolerance: 'Moderate',
-    language: 'ka', // defaults to Georgian matching the uploaded documents
-    currency: 'GEL', // Georgian Lari default for familiar local numbers
-    xp: 250,
-    level: 2,
-    streak: 6,
-    completedLessons: ['lesson-inflation'],
-    unlockedBadges: ['first-step'],
-    isPro: false,
-    onboardingCompleted: true,
+  // Load or initialize UserProfile with localStorage persistence
+  const [user, setUser] = useState<UserProfile>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.USER);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...PRESENTATION_DEMO_USER, ...parsed };
+      }
+    } catch {
+      // ignore storage errors
+    }
+    return PRESENTATION_DEMO_USER;
   });
 
-  // Budget Data
-  const [budget, setBudget] = useState<BudgetData>({
-    income: 3200,
-    fixedExpenses: 1350,
-    discretionaryExpenses: 700,
-    debtPayments: 0,
-    monthlySavings: 1150,
-    currentLiquidSavings: 8500,
-    currentInvestments: 12000,
+  // Load or initialize BudgetData
+  const [budget, setBudget] = useState<BudgetData>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.BUDGET);
+      if (saved) {
+        return { ...PRESENTATION_DEMO_BUDGET, ...JSON.parse(saved) };
+      }
+    } catch {
+      // ignore
+    }
+    return PRESENTATION_DEMO_BUDGET;
   });
 
-  // Goals Data
-  const [goals, setGoals] = useState<FinancialGoal[]>([
-    {
-      id: 'g-1',
-      title: 'საგანგებო ფონდი და რემონტი',
-      category: 'emergency',
-      targetAmount: 15000,
-      currentAmount: 8500,
-      targetYears: 2,
-      priority: 'high',
-    },
-    {
-      id: 'g-2',
-      title: 'საპენსიო კაპიტალი (Pillar II)',
-      category: 'retirement',
-      targetAmount: 60000,
-      currentAmount: 12000,
-      targetYears: 15,
-      priority: 'high',
-    },
-    {
-      id: 'g-3',
-      title: 'შვილის განათლების ფონდი',
-      category: 'education',
-      targetAmount: 25000,
-      currentAmount: 3200,
-      targetYears: 6,
-      priority: 'medium',
-    },
-  ]);
+  // Load or initialize Financial Goals
+  const [goals, setGoals] = useState<FinancialGoal[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.GOALS);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {
+      // ignore
+    }
+    return PRESENTATION_DEMO_GOALS;
+  });
+
+  // Persist to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+    } catch {
+      // ignore
+    }
+  }, [user]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.BUDGET, JSON.stringify(budget));
+    } catch {
+      // ignore
+    }
+  }, [budget]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goals));
+    } catch {
+      // ignore
+    }
+  }, [goals]);
 
   // Tab & Modal State
   const [currentTab, setCurrentTab] = useState<string>('overview');
   const [selectedCalc, setSelectedCalc] = useState<string>('compound');
   const [advisorInitialPrompt, setAdvisorInitialPrompt] = useState<string>('');
+  const [initialLessonNodeId, setInitialLessonNodeId] = useState<string | null>(
+    null
+  );
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isLearningProfileOpen, setIsLearningProfileOpen] = useState(false);
 
   const t = translations[user.language];
+
+  // Activate Presentation Demo Mode (Section 10)
+  const handleActivatePresentationDemo = () => {
+    setUser(PRESENTATION_DEMO_USER);
+    setBudget(PRESENTATION_DEMO_BUDGET);
+    setGoals(PRESENTATION_DEMO_GOALS);
+  };
+
+  // Reset Demo Mode ("დემოს განულება")
+  const handleResetDemo = () => {
+    const freshUser: UserProfile = {
+      ...PRESENTATION_DEMO_USER,
+      xp: 0,
+      level: 1,
+      levelTitle: 'Beginner I',
+      nextLevelTitle: 'Beginner II',
+      nextLevelXp: 200,
+      streak: 0,
+      dailyCompletedActivities: 0,
+      weeklyCompletedLessons: 0,
+      usedCalculatorThisWeek: false,
+      completedLessons: [],
+      unlockedBadges: [],
+      isDemoMode: false,
+    };
+    setUser(freshUser);
+    setBudget(PRESENTATION_DEMO_BUDGET);
+    setGoals(PRESENTATION_DEMO_GOALS);
+  };
 
   const handleNavigate = (tab: string, meta?: any) => {
     setCurrentTab(tab);
     if (meta?.defaultMode) {
       setSelectedCalc(meta.defaultMode);
+    }
+    if (meta?.openLessonNodeId) {
+      setInitialLessonNodeId(meta.openLessonNodeId);
     }
   };
 
@@ -95,13 +149,20 @@ export default function App() {
     setCurrentTab('calculator');
   };
 
+  const handleStartRecommendedLesson = (lessonNodeId?: string) => {
+    if (lessonNodeId) {
+      setInitialLessonNodeId(lessonNodeId);
+    }
+    setCurrentTab('learn');
+  };
+
   const handleDiscussWithAi = (prompt: string) => {
     setAdvisorInitialPrompt(prompt);
     setCurrentTab('advisor');
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#1F64FF] selection:text-white antialiased">
       {/* Top Header */}
       <Navbar
         currentTab={currentTab}
@@ -109,6 +170,9 @@ export default function App() {
         user={user}
         setUser={setUser}
         onOpenAbout={() => setIsAboutOpen(true)}
+        onOpenLearningProfile={() => setIsLearningProfileOpen(true)}
+        onActivateDemo={handleActivatePresentationDemo}
+        onResetDemo={handleResetDemo}
       />
 
       {/* Main Content */}
@@ -132,14 +196,16 @@ export default function App() {
             goals={goals}
             setGoals={setGoals}
             onDiscussWithAi={handleDiscussWithAi}
+            onStartRecommendedLesson={handleStartRecommendedLesson}
           />
         )}
 
         {currentTab === 'calculator' && (
           <CalculatorsHub
             user={user}
+            setUser={setUser}
             initialCalc={selectedCalc}
-            onNavigateToAcademy={() => setCurrentTab('learn')}
+            onNavigateToAcademy={handleStartRecommendedLesson}
             onAskAiWithContext={handleDiscussWithAi}
           />
         )}
@@ -149,6 +215,8 @@ export default function App() {
             user={user}
             setUser={setUser}
             onOpenCalculator={handleOpenCalculator}
+            initialLessonNodeId={initialLessonNodeId}
+            onClearInitialLessonNode={() => setInitialLessonNodeId(null)}
           />
         )}
 
@@ -167,27 +235,56 @@ export default function App() {
       <footer className="border-t border-slate-200 bg-white py-8 px-4 text-xs text-slate-500">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-6 h-6 rounded-md bg-[#1F64FF] text-white flex items-center justify-center font-bold text-xs">
               A
             </div>
-            <span className="font-extrabold text-slate-900 tracking-tight text-sm">AGNO FINEDU</span>
+            <span className="font-extrabold text-slate-900 tracking-tight text-sm">
+              AGNO FINEDU
+            </span>
             <span className="text-slate-300">•</span>
-            <span className="text-slate-600">{user.language === 'ka' ? 'სწავლა + მოქმედება' : 'Learn + Act FinTech'}</span>
+            <span className="text-slate-600">
+              {user.language === 'ka' ? 'სწავლა + მოქმედება' : 'Learn + Act FinTech'}
+            </span>
+            {user.isDemoMode && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">
+                პროტოტიპი / დემო
+              </span>
+            )}
           </div>
 
           <p className="max-w-md text-[11px] text-slate-500">
             {user.language === 'ka'
-              ? 'საგანმანათლებლო და ანალიტიკური პლატფორმა. ეხმარება მომხმარებელს ინფორმირებული ფინანსური გადაწყვეტილებების მიღებაში.'
-              : 'Educational & analytics platform designed to make personal finance intuitive and accessible for all.'}
+              ? 'საგანმანათლებლო და ანალიტიკური პროტოტიპი. არ წარმოადგენს ლიცენზირებულ ფინანსურ ან საინვესტიციო კონსულტაციას.'
+              : 'Educational & analytics prototype designed to make personal finance intuitive and accessible.'}
           </p>
 
           <div className="flex items-center space-x-3 text-slate-600 font-semibold">
-            <button onClick={() => setIsAboutOpen(true)} className="hover:text-blue-600 transition-colors">
+            <button
+              onClick={() => setIsLearningProfileOpen(true)}
+              className="hover:text-[#1F64FF] transition-colors"
+            >
+              სასწავლო პროფილი
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setIsAboutOpen(true)}
+              className="hover:text-[#1F64FF] transition-colors"
+            >
               {t.navAbout}
             </button>
           </div>
         </div>
       </footer>
+
+      {/* Learning Profile & Presentation Demo Modal */}
+      <LearningProfileModal
+        user={user}
+        setUser={setUser}
+        isOpen={isLearningProfileOpen}
+        onClose={() => setIsLearningProfileOpen(false)}
+        onActivateDemo={handleActivatePresentationDemo}
+        onResetDemo={handleResetDemo}
+      />
 
       {/* About Modal */}
       <AboutModal

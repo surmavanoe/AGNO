@@ -1,0 +1,593 @@
+You are modifying our existing AGNO fintech education web prototype.
+
+IMPORTANT:
+Do not rebuild the project from scratch.
+Preserve the current visual identity, existing pages, navigation, Georgian content, Gemini API integration, and current functionality.
+
+The prototype currently has:
+- A Georgian-language personal finance dashboard
+- A “ჩემი ფული” dashboard
+- Financial goals
+- Financial calculators
+- A learning page with lesson cards
+- An AI assistant connected to the Gemini API
+- GEL and English controls in the navigation
+- White background, royal-blue primary color, rounded cards and dark navy Georgian typography
+
+The current product looks clean, but it still feels like a standard financial dashboard. Improve the FRONTEND so AGNO looks like a distinctive, gamified financial education platform similar in learning experience to Duolingo, while keeping AGNO’s professional financial identity.
+
+This is a hackathon prototype. Some advanced functions can use realistic local mock data and frontend state, but every non-functional feature must be visibly marked as “დემო”, “პროტოტიპი”, or “მალე”. Do not falsely show external bank connections, live investment data, or completed backend processing.
+
+All user-facing text must be in natural Georgian. Keep established technical names such as AI, XP, Streak, Beginner, Intermediate, Advanced, RAG and Gemini where useful.
+
+==================================================
+1. GLOBAL DESIGN RULES
+==================================================
+
+Preserve the current AGNO design language:
+
+- Primary color: #1F64FF or the closest existing AGNO blue
+- Dark navy text
+- White and very light blue backgrounds
+- Green for completed or positive states
+- Amber for warnings and attention
+- Purple only for selected AI/premium elements
+- Rounded cards with subtle borders and shadows
+- Spacious desktop layout that is also responsive on mobile
+- Reuse the existing Georgian font and typography
+- Do not replace the existing AGNO logo
+- Do not remove existing pages or navigation items
+- Do not use excessive gradients, glassmorphism or futuristic effects
+- Keep the product trustworthy, educational and modern
+- Use consistent Georgian terminology throughout the application
+
+Add small tooltips or information icons where a financial term could be unclear.
+
+==================================================
+2. UPGRADE THE “სწავლა” PAGE INTO A LEARNING PATH
+==================================================
+
+The current learning page only shows a grid of lesson cards. Keep the existing lessons, but add a new default “სასწავლო გზა” view inspired by Duolingo.
+
+At the top of the page add:
+
+Title:
+“ჩემი სასწავლო გზა”
+
+Subtitle:
+“ყოველდღე ერთი მცირე ნაბიჯი ფინანსური ცოდნის გასაუმჯობესებლად”
+
+Add a compact learning status panel containing:
+
+- Current level: Beginner
+- Knowledge score: 340 XP
+- Current streak: 4 დღე
+- Weekly goal: 3/5 გაკვეთილი
+- Current module: “პირადი ფინანსების საფუძვლები”
+- A small progress ring showing 62%
+
+Add two view controls:
+
+1. “სასწავლო გზა”
+2. “ყველა გაკვეთილი”
+
+The “ყველა გაკვეთილი” view should retain the existing lesson-card grid.
+
+The “სასწავლო გზა” view should show a vertical or slightly curved learning path with connected circular lesson nodes.
+
+Create these modules:
+
+Module 1:
+“ფინანსური საფუძვლები”
+
+Lessons:
+- შემოსავალი, ხარჯი და დანაზოგი
+- 50/30/20 წესი
+- ბიუჯეტის შექმნა
+- მოკლე შემაჯამებელი ტესტი
+
+Module 2:
+“დანაზოგი და ინფლაცია”
+
+Lessons:
+- რატომ კარგავს ფული მსყიდველობით ძალას?
+- მარტივი და რთული პროცენტი
+- დეპოზიტის რეალური შემოსავლიანობა
+- ინფლაციის პრაქტიკული სიმულაცია
+- მოდულის ტესტი
+
+Module 3:
+“რისკი და ინვესტირება”
+
+Lessons:
+- რისკი და მოსალოდნელი შემოსავალი
+- აქციები და ობლიგაციები
+- დივერსიფიკაცია
+- საინვესტიციო პორტფელის საფუძვლები
+- მოდულის ტესტი
+
+Module 4:
+“გრძელვადიანი დაგეგმვა”
+
+Lessons:
+- ფინანსური მიზნების დაგეგმვა
+- დაგროვებითი საპენსიო სისტემა
+- საგანგებო ფონდი
+- გრძელვადიანი ფინანსური გეგმა
+- საბოლოო ცოდნის შეფასება
+
+Lesson-node states:
+
+- Completed: green circle with checkmark
+- Current: large blue circle with subtle pulse or outline
+- Available: white circle with blue border
+- Locked: light gray circle with lock icon
+- Quiz: purple circle with quiz icon
+- Practical exercise: amber circle with calculator icon
+
+Do not use an infinite map. Keep the path finite, clear and professional.
+
+Clicking an available lesson node should open a lesson detail modal or page.
+
+==================================================
+3. CREATE A COMPLETE LESSON EXPERIENCE
+==================================================
+
+Create a reusable lesson modal or lesson page with these stages:
+
+1. მოკლე ახსნა
+2. ყოველდღიური მაგალითი
+3. ინტერაქციული კითხვა
+4. პრაქტიკული სავარჯიშო
+5. შედეგი
+
+Example lesson:
+“როგორ მოქმედებს ინფლაცია დანაზოგზე?”
+
+Lesson content:
+
+Opening explanation:
+“ინფლაცია ნიშნავს ფასების საერთო დონის ზრდას. თუ დანაზოგის ზრდა ინფლაციაზე დაბალია, თანხის მსყიდველობითი ძალა მცირდება.”
+
+Everyday example:
+“თუ დღეს 100 ლარით გარკვეული რაოდენობის პროდუქტის შეძენა შეგიძლია, ფასების ზრდის შემდეგ იმავე თანხით ნაკლებს შეიძენ.”
+
+Interactive question:
+“თუ დეპოზიტის წლიური სარგებელი 8%-ია, ხოლო ინფლაცია 5%, დაახლოებით რა ხდება თანხის რეალურ ღირებულებასთან?”
+
+Options:
+- იზრდება დაახლოებით 3%-ით
+- იზრდება ზუსტად 8%-ით
+- მცირდება 5%-ით
+- უცვლელი რჩება
+
+After answering:
+- Show correct/incorrect feedback
+- Show a short explanation
+- Add XP only once
+- Update lesson progress using local frontend state
+- Show a “შემდეგი” button
+
+At lesson completion, show a success modal:
+
+“გაკვეთილი დასრულებულია!”
+
+Display:
+- +20 XP
+- “ინფლაციის საფუძვლები” achievement progress
+- Streak status
+- Button: “შემდეგი გაკვეთილი”
+- Button: “ცოდნის გამოყენება კალკულატორში”
+
+Use local state or localStorage so the demo progress remains visible after refresh.
+
+==================================================
+4. ADD DUOLINGO-STYLE MOTIVATION WITHOUT MAKING IT CHILDISH
+==================================================
+
+Add these frontend components:
+
+A. Daily learning goal
+
+Card title:
+“დღიური მიზანი”
+
+Information:
+- “1/2 აქტივობა შესრულებულია”
+- A horizontal progress bar
+- Button: “გააგრძელე სწავლა”
+
+B. Learning streak
+
+Card title:
+“სწავლის უწყვეტობა”
+
+Information:
+- “4 დღე”
+- A seven-day calendar row
+- Completed days in blue or green
+- Current day highlighted
+- Future days neutral
+
+C. XP and level
+
+Show:
+- Current XP
+- Progress toward the next level
+- Current level
+- Next level requirement
+
+Example:
+“340 / 500 XP”
+“Beginner II”
+“შემდეგი დონე: Intermediate I”
+
+D. Achievements
+
+Add an “მიღწევები” section with:
+
+- “პირველი ნაბიჯი” — პირველი გაკვეთილის დასრულება
+- “ბიუჯეტის დამგეგმავი” — ბიუჯეტის მოდულის დასრულება
+- “ინფლაციის მცოდნე” — ინფლაციის ტესტში 80%+
+- “7-დღიანი Streak”
+- “მიზნების შემქმნელი” — პირველი ფინანსური მიზნის დამატება
+
+Locked achievements should remain visible but muted.
+
+E. Weekly challenge
+
+Add:
+“კვირის გამოწვევა”
+
+Example:
+“დაასრულე 3 გაკვეთილი და გამოიყენე ერთი კალკულატორი”
+
+Reward:
+“+50 XP”
+
+All gamification must reward completed learning activities, not time spent on the website.
+
+==================================================
+5. IMPROVE THE MAIN “ჩემი ფული” DASHBOARD
+==================================================
+
+The existing dashboard already shows:
+
+- Monthly income
+- Monthly expenses
+- Free amount
+- Financial goals
+- An inflation warning
+
+Preserve all current information and add a new top section:
+
+Card:
+“დღეს AGNO გირჩევს”
+
+Example content:
+“შენი დანაზოგის მიზნებიდან საგანგებო ფონდი ყველაზე ახლოსაა შესრულებასთან. დღევანდელი 4-წუთიანი გაკვეთილი დაგეხმარება გაიგო, რამდენი თვის ხარჯი უნდა შეინახო საგანგებო ფონდში.”
+
+Buttons:
+- “გაკვეთილის დაწყება”
+- “რატომ ეს რეკომენდაცია?”
+
+Clicking “რატომ ეს რეკომენდაცია?” should open a small explanation:
+
+“რეკომენდაცია ეფუძნება შენს არჩეულ მიზნებს, სასწავლო დონესა და დემო-პროფილში ნაჩვენებ პროგრესს.”
+
+Add a visible label:
+“დემო პერსონალიზაცია”
+
+Also add three small status cards:
+
+- ცოდნის დონე: Beginner
+- სასწავლო Streak: 4 დღე
+- ამ კვირის პროგრესი: 3/5
+
+Add a section:
+“ჩემი ფინანსური ჯანმრთელობა”
+
+Show a demo score:
+“68/100”
+
+Breakdown:
+- ბიუჯეტირება: კარგი
+- საგანგებო ფონდი: გასაუმჯობესებელი
+- დანაზოგის ჩვევა: საშუალო
+- ფინანსური ცოდნა: იზრდება
+
+Clearly mark it:
+“დემო შეფასება — არ წარმოადგენს საკრედიტო ან საინვესტიციო შეფასებას”
+
+==================================================
+6. IMPROVE THE “მიზნები” PAGE
+==================================================
+
+Preserve the existing three financial goal cards:
+
+- საგანგებო ფონდი და რეზერვი
+- საპენსიო კაპიტალი
+- შვილის განათლების ფონდი
+
+Add these frontend details to every goal card:
+
+- Goal category
+- Progress percentage
+- Target date
+- Current amount
+- Target amount
+- Required monthly contribution
+- “გეგმის ნახვა” button
+- “სიმულაცია” button
+- Small status label:
+  - “გეგმის მიხედვით”
+  - “მცირე ჩამორჩენა”
+  - “მიზანზე წინ”
+
+Clicking “გეგმის ნახვა” should open a modal containing:
+
+- Goal summary
+- Remaining amount
+- Remaining months
+- Current monthly contribution
+- Suggested demo contribution
+- Simple projected progress chart
+- Assumptions panel
+- Educational warning
+
+Warning text:
+“ეს არის საგანმანათლებლო სიმულაცია და არა გარანტირებული ფინანსური შედეგი.”
+
+Clicking “სიმულაცია” should allow the user to change:
+
+- Monthly contribution
+- Time period
+- Illustrative annual return
+- Illustrative inflation rate
+
+The chart and projected value should update in the frontend.
+
+Use deterministic JavaScript calculations for this simulation. Do not ask Gemini to perform the numerical calculation.
+
+For compound growth use:
+FV = P(1 + r/n)^(nt)
+
+For a recurring monthly contribution, implement the standard future value of an annuity formula.
+
+For a simplified real return show:
+((1 + nominalRate) / (1 + inflationRate)) - 1
+
+Validate all inputs:
+- No negative money values
+- Interest and inflation rates between 0% and 50%
+- Period between 1 month and 50 years
+- Never show NaN, Infinity or undefined
+
+==================================================
+7. IMPROVE THE CALCULATORS PAGE
+==================================================
+
+Create or preserve these calculator cards:
+
+1. დანაზოგის კალკულატორი
+2. რთული პროცენტის კალკულატორი
+3. ინფლაციის გავლენის კალკულატორი
+4. დეპოზიტის შემოსავლიანობა
+5. ფინანსური მიზნის კალკულატორი
+6. საპენსიო დანაზოგის სიმულატორი — mark as “დემო”
+
+Each calculator card should show:
+
+- What the calculator does
+- Required inputs
+- Estimated completion time
+- Button: “გამოთვლა”
+- Link: “გაიგე როგორ მუშაობს”
+
+After each calculation show:
+
+- Input summary
+- Total personal contributions
+- Estimated growth
+- Final projected amount
+- Inflation-adjusted value where appropriate
+- Simple chart
+- Assumptions
+- Educational explanation
+
+Add a button:
+“აუხსენი AI-ის დახმარებით”
+
+When clicked, send the already calculated result to the existing Gemini chat and ask Gemini to explain the result in simple Georgian.
+
+Gemini must not generate the numbers. Gemini only explains numbers calculated by the frontend.
+
+==================================================
+8. UPGRADE THE EXISTING GEMINI AI ASSISTANT
+==================================================
+
+Keep the existing Gemini API integration.
+
+Rename or present the assistant as:
+“AGNO AI დამხმარე”
+
+Add starter question chips:
+
+- “როგორ მოქმედებს ინფლაცია ჩემს დანაზოგზე?”
+- “რა განსხვავებაა დეპოზიტსა და ობლიგაციას შორის?”
+- “როგორ დავგეგმო საგანგებო ფონდი?”
+- “რას ნიშნავს დივერსიფიკაცია?”
+- “ამიხსენი რთული პროცენტი მარტივად”
+
+Above the chat input show:
+“AGNO AI გაძლევს საგანმანათლებლო განმარტებებს და არა პერსონალურ საინვესტიციო რეკომენდაციებს.”
+
+Add a visible tag:
+“Gemini-powered demo”
+
+Add three explanation modes:
+
+- “მარტივად”
+- “დეტალურად”
+- “მაგალითით”
+
+When a mode is selected, include it in the Gemini system instruction.
+
+Use this Gemini system instruction:
+
+“You are AGNO’s Georgian-language financial education assistant. Answer in clear, natural Georgian. Adapt the explanation to the selected level: Beginner, Intermediate or Advanced. Give educational explanations, practical examples and neutral scenario comparisons. Never promise returns. Never instruct the user to buy or sell a specific financial product. Never claim to know live market prices unless live data has actually been provided. If the user asks for personalized investment advice, explain the relevant financial concepts, risks and questions the user should consider instead of giving a direct recommendation. Clearly state assumptions. Keep normal answers concise unless the user selects detailed mode.”
+
+For the prototype, add a small expandable panel:
+“როგორ შეიქმნა ეს პასუხი?”
+
+The panel should show:
+
+- გამოყენებული დონე: Beginner
+- ახსნის რეჟიმი: მარტივად
+- მომხმარებლის მიზანი: საგანგებო ფონდი
+- მონაცემის წყარო: “Gemini-ის ზოგადი ცოდნა — RAG ჯერ არ არის დაკავშირებული”
+
+This last sentence is important. Do not pretend that RAG or a verified knowledge base is currently connected.
+
+==================================================
+9. ADD A DEMO PERSONALIZATION PANEL
+==================================================
+
+Add a small profile or settings panel called:
+“ჩემი სასწავლო პროფილი”
+
+Fields:
+
+- ცოდნის დონე
+- მთავარი ინტერესები
+- მიმდინარე ფინანსური მიზნები
+- სასურველი ახსნის ფორმა
+- ყოველდღიური სწავლის მიზანი
+- შეტყობინებების სიხშირე
+
+Suggested demo values:
+
+- დონე: Beginner
+- ინტერესები: ბიუჯეტირება, დანაზოგი, ინფლაცია
+- მიზანი: საგანგებო ფონდი
+- ახსნის ფორმა: მარტივად, ყოველდღიური მაგალითებით
+- დღიური მიზანი: 1 გაკვეთილი
+- კვირაში: 5 დღე
+
+Allow the user to edit these values using frontend state.
+
+The learning recommendations and Gemini prompt context should update according to these selected values.
+
+==================================================
+10. ADD A DEMO MODE FOR PRESENTATION
+==================================================
+
+Add a subtle button in the help menu or profile menu:
+“პრეზენტაციის დემო”
+
+When activated, demo mode should:
+
+- Load a complete sample user profile
+- Show 340 XP
+- Show a 4-day streak
+- Show some completed and locked lessons
+- Show the three existing financial goals
+- Show lesson and quiz progress
+- Show realistic financial-health demo data
+- Display a small “დემო რეჟიმი” badge
+- Never imply that the data came from a real bank account
+
+Add a “დემოს განულება” button.
+
+Demo mode should make it easy to present the full user journey without manually creating all data during the pitch.
+
+==================================================
+11. ADD VISUAL PRODUCT DIFFERENTIATION
+==================================================
+
+The interface should visually communicate AGNO’s identity through:
+
+- A connected learning-path design
+- Financial progress connected with educational progress
+- A “recommended next action” on each main page
+- Context-aware Gemini explanation buttons
+- XP, streaks and achievements
+- Financial scenarios connected to relevant lessons
+- Beginner/Intermediate/Advanced content labels
+- Transparent demo and AI labels
+- Georgian financial terminology
+- Clean, professional fintech design
+
+Do not make AGNO look like:
+- A generic admin dashboard
+- A cryptocurrency trading application
+- A bank account interface
+- A children’s game
+- A clone of Duolingo
+
+Use Duolingo only as inspiration for progression, lessons, streaks and rewards.
+
+==================================================
+12. INTERACTIONS THAT MUST WORK IN THE FRONTEND
+==================================================
+
+Implement these interactions with frontend state and localStorage:
+
+- Switching between Learning Path and All Lessons
+- Opening and completing a lesson
+- Answering quiz questions
+- Receiving XP once
+- Updating streak and progress
+- Unlocking the next lesson
+- Filtering lessons by difficulty and topic
+- Editing the learning profile
+- Opening goal simulation
+- Updating financial projections
+- Opening achievement details
+- Starting a recommended lesson
+- Selecting Gemini explanation mode
+- Sending calculator results to Gemini for explanation
+- Activating and resetting presentation demo mode
+
+Every visible button must either work or be explicitly disabled with:
+“მალე დაემატება”
+
+Do not leave dead buttons.
+
+==================================================
+13. RESPONSIVE AND ACCESSIBILITY REQUIREMENTS
+==================================================
+
+- Desktop must preserve the current card-based design
+- Tablet should use two-column cards
+- Mobile should use one-column cards
+- The navigation should collapse into a working mobile menu
+- Ensure Georgian text does not overflow
+- Use visible focus states
+- Add aria-labels to icon-only buttons
+- Maintain sufficient color contrast
+- Do not rely only on color to communicate lesson status
+- Use icons plus labels for completed, current and locked states
+
+==================================================
+14. FINAL OUTPUT EXPECTATION
+==================================================
+
+First inspect the existing project structure and reuse existing components where possible.
+
+Then:
+
+1. List the existing files/components that will be modified.
+2. Implement the new frontend components.
+3. Preserve the existing Gemini integration.
+4. Add local mock data in a separate clearly named file, such as:
+   demoData.ts
+5. Add frontend calculation utilities in a separate file, such as:
+   financialCalculations.ts
+6. Add localStorage state management for demo progress.
+7. Avoid unnecessary dependencies.
+8. Fix all TypeScript, import and rendering errors.
+9. Ensure all Georgian text renders correctly.
+10. Produce a polished demo that can be presented immediately.
+
+Do not merely describe the changes. Apply the changes directly to the existing prototype.
